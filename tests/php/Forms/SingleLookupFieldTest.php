@@ -44,4 +44,19 @@ class SingleLookupFieldTest extends SapphireTest
         preg_match('/\(none\)/', $testField->Field(), $matches);
         $this->assertEquals($matches[0], '(none)');
     }
+
+    public function testNoValue()
+    {
+        /** @var SingleLookupField $testField */
+        $testField = DropdownField::create(
+            'FirstName',
+            'FirstName',
+            ['member1' => 'Member 1', 'member2' => 'Member 2', 'member3' => 'Member 3']
+        )->performReadonlyTransformation();
+
+        $this->assertInstanceOf(SingleLookupField::class, $testField);
+
+        preg_match('/\(none\)/', $testField->Field(), $matches);
+        $this->assertEquals($matches[0], '(none)');
+    }
 }
