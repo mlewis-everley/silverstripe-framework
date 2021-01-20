@@ -16,26 +16,7 @@ a high level wrapper for running advanced search services such as Solr, Lucene o
 `MySQL` search.
 [/notice]
 
-## Adding Fulltext Support to MySQLDatabase
-
-The [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase) class defaults to creating tables using the InnoDB storage engine. As Fulltext search in MySQL
-requires the MyISAM storage engine, any DataObject you wish to use with Fulltext search must be changed to use MyISAM
-storage engine.
-
-You can do so by adding this static variable to your class definition:
-
-
-```php
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
-
-class MyDataObject extends DataObject 
-{
-    private static $create_table_options = [
-        MySQLSchemaManager::ID => 'ENGINE=MyISAM'
-    ];
-}
-```
+## FulltextSearchable
 
 The [FulltextSearchable](api:SilverStripe\ORM\Search\FulltextSearchable) extension will add the correct `Fulltext` indexes to the data model.
 
@@ -71,11 +52,6 @@ class SearchableDataObject extends DataObject
             'columns' => ['Title', 'Content'],
         ]
     ];
-
-    private static $create_table_options = [
-        MySQLSchemaManager::ID => 'ENGINE=MyISAM'
-    ];
-
 }
 
 ```
@@ -89,6 +65,27 @@ SearchableDataObject::get()->filter('SearchFields:Fulltext', 'search term');
 
 If your search index is a single field size, then you may also specify the search filter by the name of the
 field instead of the index.
+
+## Troubleshooting
+
+## MyISAM
+
+The [MySQLDatabase](api:SilverStripe\ORM\Connect\MySQLDatabase) class defaults to creating tables using the InnoDB storage engine. If you are using an older version of MySQL you may be required to use the MyISAM storage engine instead. In this case any DataObject you wish to use with Fulltext search must be changed to use MyISAM storage engine.
+
+You can do so by adding this static variable to your class definition:
+
+
+```php
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
+
+class MyDataObject extends DataObject 
+{
+    private static $create_table_options = [
+        MySQLSchemaManager::ID => 'ENGINE=MyISAM'
+    ];
+}
+```
 
 ## API Documentation
 
